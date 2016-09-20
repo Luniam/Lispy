@@ -17,7 +17,7 @@ def tokenize(chars):
     return chars.replace('(', ' ( ').replace(')', ' ) ').split()
 
 
-def readFromTokens(tokens):
+def readFromTokens(tokens): #(begin (define r 10) (* pi (* r r)))
     if len(tokens) == 0:
         raise ValueError("Unexpected end of line while parsing")
     token = tokens.pop(0)
@@ -46,4 +46,5 @@ def standardEnv():
     env.update(math.vars)
 
 program = "(begin (define r 10) (* pi (* r r)))"
-print parse(program)
+wrong = "(begin (define r 10) (* pi (* r r))"
+print parse(wrong)
