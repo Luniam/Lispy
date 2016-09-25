@@ -17,14 +17,17 @@ def tokenize(chars):
     return chars.replace('(', ' ( ').replace(')', ' ) ').split()
 
 
-def readFromTokens(tokens): #(begin (define r 10) (* pi (* r r)))
+def readFromTokens(tokens):
     if len(tokens) == 0:
         raise ValueError("Unexpected end of line while parsing")
     token = tokens.pop(0)
     if token == '(':
         L = []
-        while (tokens[0] != ')'):
-            L.append(readFromTokens(tokens))
+        try :
+            while (tokens[0] != ')'):
+                L.append(readFromTokens(tokens))
+        except IndexError:
+            raise ValueError("Unexpected end of line while parsing")
         tokens.pop(0)
         return L
     elif token == ')':
@@ -43,8 +46,20 @@ def atom(token):
 
 def standardEnv():
     env = Env()
-    env.update(math.vars)
+    env.update(vars(math))
+    env.update({
+            "+" : op.add, "-" : op.sub, "*" : op.mul, "/" : op.div
+        })
+    return env
+
+globalEnv = standardEnv()
+
+def eval(x, env = globalEnv):
+    print x
+    if isinstance(x, Symbol):
+        return env[x]
 
 program = "(begin (define r 10) (* pi (* r r)))"
-wrong = "(begin (define r 10) (* pi (* r r))"
-print parse(wrong)
+program3 = "(define r 10)"
+##program2 = "(define circle-area (lambda (r) (* pi (* r r))))"
+print parse(program3)

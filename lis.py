@@ -23,8 +23,11 @@ def readFromTokens(tokens):
     token = tokens.pop(0)
     if token == '(':
         L = []
-        while (tokens[0] != ')'):
-            L.append(readFromTokens(tokens))
+        try :
+            while (tokens[0] != ')'):
+                L.append(readFromTokens(tokens))
+        except IndexError:
+            raise ValueError("Unexpected end of line while parsing")
         tokens.pop(0)
         return L
     elif token == ')':
@@ -46,4 +49,6 @@ def standardEnv():
     env.update(math.vars)
 
 program = "(begin (define r 10) (* pi (* r r)))"
+program2 = "(define circle-area (lambda (r) (* pi (* r r))))"
 print parse(program)
+print parse(program2)
